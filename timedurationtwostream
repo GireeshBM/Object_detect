@@ -2,8 +2,8 @@ import cv2
 import time
 
 # RTSP URLs
-stream_url_1 = 'rtsp://192.168.5.10:8554/compose-cam1'
-stream_url_2 = 'rtsp://192.168.5.10:6000/ds-test1'
+stream_url_1 = 'rtsp:///{ip_address}:8554/compose-cam1'
+stream_url_2 = 'rtsp:///{ip_address}:6000/ds-test1'
 
 # Open video streams
 cap1 = cv2.VideoCapture(stream_url_1)

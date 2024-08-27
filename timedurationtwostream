@@ -1,0 +1,60 @@
+import cv2
+import time
+
+# RTSP URLs
+stream_url_1 = 'rtsp://192.168.5.10:8554/compose-cam1'
+stream_url_2 = 'rtsp://192.168.5.10:6000/ds-test1'
+
+# Open video streams
+cap1 = cv2.VideoCapture(stream_url_1)
+cap2 = cv2.VideoCapture(stream_url_2)
+
+# Check if streams are opened successfully
+if not cap1.isOpened():
+    print("Error: Could not open stream 1")
+    exit()
+if not cap2.isOpened():
+    print("Error: Could not open stream 2")
+    exit()
+
+# Initialize frame counters and start time
+frame_count1 = 0
+frame_count2 = 0
+start_time = time.time()
+
+# Function to display time duration and frame count
+def display_status(stream, frame_count, start_time):
+    elapsed_time = time.time() - start_time
+    print(f"Stream {stream} - Frames: {frame_count}, Time Duration: {elapsed_time:.2f} seconds")
+
+# Loop to read and compare frames
+while cap1.isOpened() and cap2.isOpened():
+    ret1, frame1 = cap1.read()
+    ret2, frame2 = cap2.read()
+
+    if not ret1 or not ret2:
+        print("Error: Could not read frame from one of the streams")
+        break
+
+    # Update frame counters
+    frame_count1 += 1
+    frame_count2 += 1
+
+    # Display the frames (optional)
+    cv2.imshow('Stream 1', frame1)
+    cv2.imshow('Stream 2', frame2)
+
+    # Display status every second
+    if frame_count1 % 5 == 0:
+        display_status(1, frame_count1, start_time)
+    if frame_count2 % 5 == 0:
+        display_status(2, frame_count2, start_time)
+
+    # Press 'q' to exit the loop
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+# Release the video captures and close windows
+cap1.release()
+cap2.release()
+cv2.destroyAllWindows()
